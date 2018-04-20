@@ -20,9 +20,6 @@
             "homepage": "http://www.krajee.com/"
         }
     ],
-    "require": {
-        "murat-cileli/php-reports": "~1.0"
-    },
     "autoload": {
         "psr-4": {
             "kartik\\report\\": ""

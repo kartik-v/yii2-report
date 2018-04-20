@@ -8,18 +8,25 @@
 
 namespace kartik\report;
 
-use PHPReports\PHPReports;
+use yii\base\InvalidCallException;
+use yii\base\InvalidConfigException;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Json;
 
 /**
  * The Report class is a Yii2 component component to generate beautiful formatted reports 
- * using Microsoft Word Document Templates in PDF/DOC/DOCX format. It uses the [[PhpReports]]
- * library.
+ * using Microsoft Word Document Templates in PDF/DOC/DOCX format.
  *
  * @author Kartik Visweswaran <kartikv2@gmail.com>
  * @since 1.0
  */
 class Report extends Component
 {
+    /**
+     * PHP Reports API
+     */
+    const API = 'https://www.php-reports.com/api/report/generate';
+
     /**
      * Output File Type - MS Word DOCX
      */
@@ -75,47 +82,43 @@ class Report extends Component
      * @var string the output action
      */
     public $outputAction;
-    
-    /**
-     * @var PhpReports the php report object
-     */
-    protected $_report;
 
     /**
      * @inheritdoc
      */
     public function init()
     {
-        $this->initReport();
         parent::init();
+        $this->validateConfig();
+        $this->templateVariables = array_replace_recursive($this->defaultTemplateVariables, $this->templateVariables);
     }
-
+ 
     /**
-     * Initialize report library
+     * Validate configuration pre-requisites
      *
      * @throws InvalidConfigException
-     */
-    protected function initReport()
+     */   
+    protected function validateConfig()
     {
-        $vars = $this->templateVariables;
-        $vars = array_replace_recursive($this->defaultTemplateVariables, $vars);
-        $r = new PHPReports($this->apiKey);
-        $r->setTemplateId($this->templateId);
-        $r->setOutputAction($this->outputAction);
-        $r->setOutputFileType($this->outputFileType);
-        $r->setOutputFileName($this->outputFileName);
-        $r->setTemplateVariables($vars);
-        $this->_report = $r;
-    }
-    
-    /**
-     * Gets the PHPReports report object instance
-     *
-     * @return PHPReports
-     */
-    public function getReport()
-    {
-        return $this->_report;
+        if (!extension_loaded('curl')) {
+            throw new InvalidConfigException("The 'curl' php extension must be enabled and loaded to generate reports via 'yii2-report'.");
+        }
+        if (empty($this->apiKey) || strlen($this->apiKey) != 24) {
+            throw new InvalidConfigException("Invalid API key! Ensure a valid 'apiKey' has been configured in the 'yii2-report' component.");
+        }
+        if (empty($this->templateId) || !is_numeric($this->templateId)) {
+            throw new InvalidConfigException("Invalid Template ID! Ensure a valid 'templateId' has been configured in the 'yii2-report' component.");
+        }
+        if (empty($this->templateVariables) && empty($this->defaultTemplateVariables) 
+            || !is_array($this->templateVariables) || !is_array($this->defaultTemplateVariables)) {
+            throw new InvalidConfigException("Invalid Template Variables! Template variables must be configured as an array.");
+        }
+        if ($this->outputAction != self::ACTION_FORCE_DOWNLOAD && $this->outputAction != self::ACTION_GET_DOWNLOAD_URL) {
+            $this->outputAction = self::ACTION_FORCE_DOWNLOAD;
+        }
+        if ($this->outputFileType != self::OUTPUT_PDF && $this->outputFileType != self::OUTPUT_DOCX) {
+            $this->outputFileType = self::OUTPUT_PDF;
+        }
     }
     
     /**
@@ -123,6 +126,36 @@ class Report extends Component
      */
     public function generateReport()
     {
-        $this->_report->generateReport();
+        $postFields = [
+            'api_key'            => $this->apiKey,
+            'template_id'        => $this->templateId,
+            'template_variables' => $this->templateVariables,
+            'output_file_name'   => $this->outputFileName,
+            'output_file_type'   => $this->outputFileType,
+            'output_action'      => $this->outputAction
+        ];
+        $json = Json::encode($postFields);
+        $ch = curl_init(self::API);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "json={$json}");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_httpCode);
+        curl_close($ch);
+        if ($httpCode != 200 && $httpCode != 302) {
+            throw new InvalidCallException("Can not make API request. HTTP status code: {$httpCode}");
+        }
+        if ($this->outputAction == self::ACTION_GET_DOWNLOAD_URL) {
+            echo $response;
+        } else {
+            $response = Json::decode($response);
+            $url = ArrayHelper::getValue($response, 'report_url', '');
+            if (empty($url)) {
+                throw new InvalidCallException("Could not process the API request. Invalid response URL received from the API.");
+            }
+            header("Location: {$url}");
+        }
     }
 }

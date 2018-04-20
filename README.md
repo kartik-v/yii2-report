@@ -8,7 +8,7 @@ yii2-report
 [![Monthly Downloads](https://poser.pugx.org/kartik-v/yii2-report/d/monthly)](https://packagist.org/packages/kartik-v/yii2-report)
 [![Daily Downloads](https://poser.pugx.org/kartik-v/yii2-report/d/daily)](https://packagist.org/packages/kartik-v/yii2-report)
 
-A Yii2 component to generate beautiful formatted reports using Microsoft Word Document Templates in PDF/DOC/DOCX format. The component uses the [PHP reports library API](https://www.php-reports.com/) to generate reports. PHP-Reports is a cloud based, interactive report engine which helps in generating well formatted PDF reports from Word / DOCX templates. The component uses the [PHP-Report library class](https://github.com/murat-cileli/php-reports) to generate formatted reports.
+A Yii2 component to generate beautiful formatted reports using Microsoft Word Document Templates in PDF/DOC/DOCX format. The component uses the [PHP reports library API](https://www.php-reports.com/) to generate reports. PHP-Reports is a cloud based, interactive report engine which helps in generating well formatted PDF reports from Word / DOCX templates.
 
 How to contribute via a pull request?
 -------------------------------------
@@ -100,6 +100,9 @@ use kartik\report\Report;
 
 $report = Yii::$app->report;
 
+// set your template identifier (override global defaults)
+$report->templateId = 2;
+
 // If you want to override the output file name, uncomment line below
 // $report->outputFileName = 'My_Generated_Report.pdf';
 
@@ -126,7 +129,7 @@ $report->templateVariables = [
     'prices' => ['490 USD', '399 USD', '199 USD'], 
 ];
 
-// Lastly in your controller action or view file generate the report
+// lastly generate the report
 $report->generateReport();
 ```
 
