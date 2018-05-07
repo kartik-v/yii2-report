@@ -15,7 +15,7 @@ use yii\helpers\Json;
 
 /**
  * The Report class is a Yii2 component component to generate beautiful formatted reports 
- * using Microsoft Word Document Templates in PDF/DOC/DOCX format.
+ * using Microsoft Word Document Templates in PDF/DOCX format.
  *
  * @author Kartik Visweswaran <kartikv2@gmail.com>
  * @since 1.0
@@ -151,7 +151,7 @@ class Report extends Component
             echo $response;
         } else {
             $response = Json::decode($response);
-            $url = ArrayHelper::getValue($response, 'report_url', '');
+            $url = isset($response->report_url) ? $response->report_url : ArrayHelper::getValue($response, 'report_url', '');
             if (empty($url)) {
                 throw new InvalidCallException("Could not process the API request. Invalid response URL received from the API.");
             }

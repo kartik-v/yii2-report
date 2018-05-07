@@ -77,7 +77,7 @@ use kartik\report\Report;
 
 // ...
 'components' => [
-    // setup Krajee Pdf component
+    // setup Krajee Yii2 Report component
     'report' => [
         'class' => Report::classname(),
         'apiKey' => 'YOUR_PHP_REPORTS_API_KEY',
