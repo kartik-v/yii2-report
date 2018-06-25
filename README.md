@@ -58,7 +58,7 @@ To accelerate the process of creating your reports and applications, PHP Reports
 
 ### Step 3: Using Template Variables
 
-You can use template variables in your Microsoft Word template. Tamplate variables take their name from the contents of their double curly braces and they can later be replaced with a concrete value.
+You can use template variables in your Microsoft Word template. Template variables take their name from the contents of their double curly braces and they can later be replaced with a concrete value.
 
 All template variable names within a template string must be unique. Template variable names are case-insensitive.
 
