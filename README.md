@@ -1,5 +1,15 @@
-yii2-report
-===========
+<h1 align="center">
+    <a href="http://demos.krajee.com" title="Krajee Demos" target="_blank">
+        <img src="http://kartik-v.github.io/bootstrap-fileinput-samples/samples/krajee-logo-b.png" alt="Krajee Logo"/>
+    </a>
+    <br>
+    yii2-report
+    <hr>
+    <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DTP3NZQ6G2AYU"
+       title="Donate via Paypal" target="_blank">
+        <img src="http://kartik-v.github.io/bootstrap-fileinput-samples/samples/donate.png" alt="Donate"/>
+    </a>
+</h1>
 
 [![Latest Stable Version](https://poser.pugx.org/kartik-v/yii2-report/v/stable)](https://packagist.org/packages/kartik-v/yii2-report)
 [![Latest Unstable Version](https://poser.pugx.org/kartik-v/yii2-report/v/unstable)](https://packagist.org/packages/kartik-v/yii2-report)
@@ -7,6 +17,7 @@ yii2-report
 [![Total Downloads](https://poser.pugx.org/kartik-v/yii2-report/downloads)](https://packagist.org/packages/kartik-v/yii2-report)
 [![Monthly Downloads](https://poser.pugx.org/kartik-v/yii2-report/d/monthly)](https://packagist.org/packages/kartik-v/yii2-report)
 [![Daily Downloads](https://poser.pugx.org/kartik-v/yii2-report/d/daily)](https://packagist.org/packages/kartik-v/yii2-report)
+
 
 A Yii2 component to generate beautiful formatted reports using Microsoft Word Document Templates in PDF/DOC/DOCX format. The component uses the [PHP reports library API](https://www.php-reports.com/) to generate reports. PHP-Reports is a cloud based, interactive report engine which helps in generating well formatted PDF reports from Word / DOCX templates.
 
@@ -119,7 +130,6 @@ $report->templateId = 2;
 $report->templateVariables = [
     'client_name' => 'Murat Cileli', 
     'address' => 'Kadikoy, Istanbul / Turkey', 
-    'address' => 'Kadikoy, Istanbul / Turkey', 
     'date' => '10-Apr-2018', 
     'phone' => '+1-800-3399622', 
     'email' => 'admin@gmail.com', 
@@ -129,8 +139,8 @@ $report->templateVariables = [
     'prices' => ['490 USD', '399 USD', '199 USD'], 
 ];
 
-// lastly generate the report
-$report->generateReport();
+// lastly in your controller action download the generated report
+return $report->generateReport();
 ```
 
 ### Step 7: Check your output report document
@@ -141,4 +151,4 @@ Your output should look something like below:
 
 ## License
 
-**yii2-report** is released under the BSD 3-Clause License. See the bundled `LICENSE.md` for details.
+**yii2-report** is released under the BSD-3-Clause License. See the bundled `LICENSE.md` for details.

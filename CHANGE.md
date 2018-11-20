@@ -1,8 +1,10 @@
 Change Log: `yii2-report`
 =========================
 
-## Version 1.0.0 (_under development_)
+## Version 1.0.0
 
-**Date:** _work in progress_
+**Date:** _under development_
 
+- Move all source code to `src` directory.
+- (bug #2): Correct class namespace.
 - Initial release

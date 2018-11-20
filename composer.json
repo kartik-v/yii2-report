@@ -22,7 +22,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "kartik\\report\\": ""
+            "kartik\\report\\": "src"
         }
     },
     "extra": {
